@@ -1,0 +1,32 @@
+services:
+    mysql:
+        image: mysql
+        container_name: nodejs_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: formulaone
+            MYSQL_USER: gohanfx
+            MYSQL_PASSWORD: almafa123
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+
+
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: nodejs_phpmyadmin
+        restart: always
+        environment:
+            PMA_HOST: nodejs_mysql
+            PMA_USER: root
+            PMA_PASSWORD: root
+            PMA_PORT: 3306
+        ports:
+            - "8081:80"
+        depends_on:
+            -   mysql
+
+volumes:
+    mysql_data:
