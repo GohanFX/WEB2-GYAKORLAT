@@ -1,0 +1,51 @@
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("USER")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Driver {
+  id        Int      @id @default(autoincrement())
+  name      String
+  sex       String
+  birthDate DateTime
+  country   String
+
+  results Result[]
+}
+
+model GP {
+  date    DateTime @id
+  name    String
+  country String
+  results Result[]
+}
+
+model Result {
+  id       Int      @id @default(autoincrement())
+  driverId Int
+  gpDate   DateTime
+  position Int?
+  mistake  String?
+  team     String?
+  type     String?
+  engine   String?
+
+  driver Driver @relation(fields: [driverId], references: [id])
+  gp     GP     @relation(fields: [gpDate], references: [date])
+
+  @@unique([driverId, gpDate])
+}
